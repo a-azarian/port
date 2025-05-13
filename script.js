@@ -1,79 +1,75 @@
 let index = 0;
-const images = document.querySelectorAll(".slides img");
-let zoomed = false;
+const images = document.querySelectorAll(.slides img);
+let zoomLevel = 1;
 let hideControlsTimer = null;
 
-// نمایش اسلاید مشخص
+ نمایش اسلاید مشخص
 function showSlide(i) {
-  images.forEach((img, idx) => {
-    img.style.display = idx === i ? "block" : "none";
-    img.style.transform = "scale(1)";
+  images.forEach((img, idx) = {
+    img.style.display = idx === i  block  none;
+    img.style.transform = scale(1);
   });
-  zoomed = false;
+  zoomLevel = 1;
 }
 
-// رفتن به اسلاید بعدی
+ اسلاید بعدی
 function nextSlide() {
   index = (index + 1) % images.length;
   showSlide(index);
 }
 
-// رفتن به اسلاید قبلی
+ اسلاید قبلی
 function prevSlide() {
   index = (index - 1 + images.length) % images.length;
   showSlide(index);
 }
 
-// گرفتن تصویر فعلی
-function getCurrentImage() {
-  return images[index];
-}
-
-// زوم این به 1.5x
-function zoomIn() {
-  if (!zoomed) {
-    getCurrentImage().style.transform = "scale(1.5)";
-    zoomed = true;
-  }
-}
-
-// زوم اوت به 1x
-function zoomOut() {
-  if (zoomed) {
-    getCurrentImage().style.transform = "scale(1)";
-    zoomed = false;
-  }
-}
-
-// فعال‌سازی/خروج از حالت تمام صفحه
+ فعالغیرفعال کردن تمام‌صفحه
 function toggleFullscreen() {
   const elem = document.documentElement;
   if (!document.fullscreenElement) {
-    elem.requestFullscreen().catch(err =>
-      console.error("Fullscreen failed:", err)
+    elem.requestFullscreen().catch(err =
+      console.error(Fullscreen failed, err)
     );
   } else {
     document.exitFullscreen();
   }
 }
 
-// خروج از fullscreen با کلید Escape
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && document.fullscreenElement) {
+ خروج از حالت تمام‌صفحه با Escape
+document.addEventListener(keydown, (event) = {
+  if (event.key === Escape && document.fullscreenElement) {
     document.exitFullscreen();
   }
 });
 
-// نمایش کنترل‌ها هنگام حرکت موس
-function showControlsTemporarily() {
-  document.body.classList.add("visible-controls");
-  if (hideControlsTimer) clearTimeout(hideControlsTimer);
-  hideControlsTimer = setTimeout(() => {
-    document.body.classList.remove("visible-controls");
-  }, 3000); // ۳ ثانیه پس از آخرین حرکت موس
+ گرفتن تصویر فعال
+function getCurrentImage() {
+  return images[index];
 }
 
-document.addEventListener("mousemove", showControlsTemporarily);
+ زوم این
+function zoomIn() {
+  zoomLevel = Math.min(zoomLevel + 0.2, 2);
+  getCurrentImage().style.transform = `scale(${zoomLevel})`;
+}
 
-// نمایش اسلاید اول در شروع
+ زوم اوت
+function zoomOut() {
+  zoomLevel = Math.max(zoomLevel - 0.2, 1);
+  getCurrentImage().style.transform = `scale(${zoomLevel})`;
+}
+
+ نمایش کنترل‌ها با حرکت موس
+function showControlsTemporarily() {
+  document.body.classList.add(visible-controls);
+  if (hideControlsTimer) clearTimeout(hideControlsTimer);
+  hideControlsTimer = setTimeout(() = {
+    document.body.classList.remove(visible-controls);
+  }, 3000);  بعد از ۳ ثانیه مخفی می‌شود
+}
+
+document.addEventListener(mousemove, showControlsTemporarily);
+
+ نمایش اسلاید اول هنگام بارگذاری
 showSlide(index);
